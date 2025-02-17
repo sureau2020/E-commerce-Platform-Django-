@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2>View by categories</h2>
+
+    {% if message %}
+    <div style="color: rgb(255, 129, 129); margin-bottom: 10px;">{{ message }}</div>
+    {% endif %}
+
+    {% for category in Categories %}
+    <li><a href="{% url 'category' category.name %}" style="font-size: larger;">{{ category.name }}</a></li>
+    
+    {% endfor %}
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    {% if message %}
+    <div style="color: rgb(255, 129, 129);">{{ message }}</div>
+    {% endif %}
+
+    <h2>Watching List</h2>
+
+    {% for auction in watchlists %}
+    <div class="auction" onclick='location.href="{{auction.auction.id }}"' >
+        <img src="{{auction.auction.imageURL}}" alt="NO IMAGE" style="position: absolute; height:90%; max-width: 30%; margin: auto; float: left; border-radius: 10px;">
+        <h3 style="position: absolute; margin-left: 35%;margin-top: 10px;">{{auction.auction.name}}</h3>
+        <h6 style="position: absolute;margin-left: 35%; margin-top: 50px;">Price: {{auction.auction.current_price}} $</h6>
+        <p style="position: absolute;margin-left: 35%; margin-top: 75px;">Category: {{auction.auction.categories}}</p>
+        <p style="position: absolute;margin-left: 35%; margin-top: 110px;">{{auction.auction.description}}</p>
+
+
+    </div>
+    {% empty %}
+        <h3 style="margin: 30px;">No auctions in your watchlist.</h3>
+    {% endfor %}
+
+{% endblock %}

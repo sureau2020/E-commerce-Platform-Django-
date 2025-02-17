@@ -1,0 +1,24 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    
+    <h2>{{category.name}}</h2>
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    {% for auction in auctions %}
+    <div class="auction" onclick='location.href="{{auction.id }}"' >
+        <img src="{{auction.imageURL}}" alt="NO IMAGE" style="position: absolute; height:90%; max-width: 30%; margin: auto; float: left; border-radius: 10px;">
+        <h3 style="position: absolute; margin-left: 35%;margin-top: 10px;">{{auction.name}}</h3>
+        <h6 style="position: absolute;margin-left: 35%; margin-top: 50px;">Price: {{auction.current_price}} $</h6>
+        <p style="position: absolute;margin-left: 35%; margin-top: 75px;">Category: {{auction.categories}}</p>
+        <p style="position: absolute;margin-left: 35%; margin-top: 110px;">{{auction.description}}</p>
+
+
+    </div>
+    {% endfor %}
+
+{% endblock %}

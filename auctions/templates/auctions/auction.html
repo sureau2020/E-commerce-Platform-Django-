@@ -1,0 +1,96 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+{% if message %}
+<div style="color: rgb(255, 129, 129);">{{ message }}</div>
+{% endif %}
+
+    <h2>{{ auction.name }}</h2>
+<div class="column auction_description">  
+    <img src="{{ auction.imageURL }}" alt="{{ auction.name }}" style="max-width:90%; height:300px; margin: 20px;">
+    <h3>Current price: {{auction.current_price}} $</h3>
+    <p style="color: rgb(221, 221, 221);">Starting price: {{auction.start_price}} $</p>
+    <div class="category">
+        <p>Category:   </p>
+        <a href="{% url 'category' auction.categories.name %}">{{auction.categories}}</a>
+    </div>
+    <p>Listed by: {{ auction.user }}</p>
+    <h5>Description:</h5>
+    <p style="margin-left: 20px;">{{ auction.description }}</p>
+</div>
+
+<div class="column bids">
+    <h2>Bid history:</h2>
+    <div class="bid_history" style="height: 440px; margin-bottom: 10px; ">
+    {% for i in bids %}
+        <div class="one_bid" style="padding:10px; border-top: 1px solid rgb(63, 62, 76); margin-top: 20px; border-bottom: 1px solid rgb(63, 62, 76);">
+            <h3 style="margin-left: 40px; margin-top: 5px;">{{i.user}}: {{i.bid_price}} $</h3>
+        </div>
+    {% empty %}
+        <h3 style="margin: 40px;">No bids yet</h3>
+    {% endfor %}
+    </div >
+{% if request.user.is_authenticated %}
+    <form action="{% url 'BID' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group" style="position: absolute; ">
+            <input autofocus class="form-control" type="text" name="price" placeholder="price $">
+            <input autofocus class="form-control" type="hidden" name="user" value="{{ auction.user }}">
+            <input autofocus class="form-control" type="hidden" name="auction" value="{{ auction.id }}">
+            <input class="btn btn-primary" type="submit" value="BID" style="margin-top: 10px; float: left;">
+        </div>
+    </form> 
+{% endif %}
+</div>
+
+<div class="rest">
+{% if opened %}
+    {% if request.user.is_authenticated %}
+        {% if owner == True %}
+            <a href="{% url 'auction_close' auction_id=auction.id %}" class="btn btn-danger">Close auction</a>
+        {% endif %}
+        {% if watchlist == True %}
+            <a href="{% url 'watchlist_remove' auction_id=auction.id %}" class="btn btn-danger" style="margin: 20px;">Remove from watchlist</a>
+        {% else %}
+            <a href="{% url 'watchlist_add' auction_id=auction.id %}" class="btn btn-danger" style="margin: 20px;" >Add to watchlist</a>
+        {% endif %}
+        <form action="{% url 'comment' %}" method="post" >
+            {% csrf_token %}
+            <textarea name="content" placeholder="Type your comment" style="height: 10vh; width: 100%; margin-bottom: 20px; display: block;" ></textarea>
+            <input type="hidden" id="" name="auction_id" value="{{auction.id}}">
+            <input type="hidden" id="" name="user" value="{{user}}">
+            <input class="btn btn-primary" type="submit" value="Comment" style="float: right;margin-bottom: 30px;">
+        </form>
+    {% else %}
+        <div style="height: 10vh; margin-bottom:20px; background-color:rgb(20, 20, 21);">
+            <p style="text-align: center; padding-top: 3vh;">Please <a href="{% url 'login' %}">login</a> to comment, bid and add to watchinglist.</p>
+        </div>
+        
+    {% endif %}
+{% else %}
+    <div style="height: 10vh; margin-bottom:20px; margin-top: 50px; background-color:rgb(20, 20, 21);">
+        {% if bid %}
+            <p style="text-align: center; padding-top: 3vh;">This auction is already closed, the bid winner is {{bid.user}}.</p>
+        {% else %}
+            <p style="text-align: center; padding-top: 3vh;">This auction is already closed, the bid winner is {{auction.user}}</p>
+        {% endif %}
+    </div>
+{% endif %}
+
+    <div class="allComment" style="margin-top: 80px; border-top: 2px solid rgb(164, 189, 255); border-bottom: 2px solid rgb(164, 189, 255); margin-bottom: 70px;">
+        <h3 style="text-align: center; margin-left: 40px;">All Comments</h3>
+        {% for comment in comments %}
+        <div class="comment">
+            <h5 style="margin-top:10px ; margin-left: 30px;">{{comment.user}} :</h5>
+            <p style="margin-left: 50px;">{{comment.comment}}</p>
+        </div>
+        {% empty %}
+        <h5 style="margin: 30px;">No comment.</h5>
+
+        {% endfor %}
+    </div>
+
+</div>
+
+{% endblock %}

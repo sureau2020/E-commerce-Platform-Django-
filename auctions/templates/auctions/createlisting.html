@@ -1,0 +1,38 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2>Create listing</h2>
+
+    {% if message %}
+        <div style="color: rgb(255, 129, 129);">{{ message }}</div>
+        Don't have an account? <a href="{% url 'register' %}">Register here.</a>
+        <br>
+        <br>
+    {% endif %}
+
+    <form action="{% url 'createitme' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <input autofocus class="form-control" style="width: 80%" type="text" name="title" placeholder="type your item's name">
+        </div>
+        <div class="form-group">
+            <input class="form-control" style="width: 50%;" type="text" name="price" placeholder="type your starting price">
+        </div>
+        <div class="form-group">
+            <input class="form-control" style="width: 80%"  type="text" name="imgurl" placeholder="type your img URL, if there isn't, type nothing.">
+        </div>
+        <div class="form-group">
+            <textarea name="describe" placeholder="type your description" style="height: 50vh; width: 80%" ></textarea>
+        </div>
+        <p style="display: float;">Category:</p>
+        <select name="category" id="">
+            {% for Category in Categoryies %}
+                <option value="{{ Category }}">{{ Category }}</option>
+            {% endfor %}
+        </select>
+        <br><br>
+        <input class="btn btn-primary" type="submit" value="save" style="margin: 10px;">
+    </form>
+    <br><br>
+{% endblock %}
